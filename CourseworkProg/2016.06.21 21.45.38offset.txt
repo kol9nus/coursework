@@ -1,0 +1,185 @@
+-------------------------------------------------------------------------------
+n = 5
+4 
+abaabbaba
+Syncword length: 9
+-------------------------------------------------------------------------------
+n = 6
+1 4 
+abaabaababa
+Syncword length: 11
+-------------------------------------------------------------------------------
+n = 6
+4 1 
+abaabaabbaba
+Syncword length: 12
+-------------------------------------------------------------------------------
+n = 7
+1 4 1 
+abaabaababaaba
+Syncword length: 14
+-------------------------------------------------------------------------------
+n = 7
+4 1 1 
+abaabaabbabaaba
+Syncword length: 15
+-------------------------------------------------------------------------------
+n = 7
+1 1 4 
+abababaabbababa
+Syncword length: 15
+-------------------------------------------------------------------------------
+n = 8
+1 4 1 1 
+abaabaabababaabaaba
+Syncword length: 19
+-------------------------------------------------------------------------------
+n = 8
+1 1 4 1 
+ababaaababaabbababa
+Syncword length: 19
+-------------------------------------------------------------------------------
+n = 8
+4 1 1 1 
+abaabaabbababaabbaba
+Syncword length: 20
+-------------------------------------------------------------------------------
+n = 9
+1 4 1 1 1 
+abaabaabababbaababaaba
+Syncword length: 22
+-------------------------------------------------------------------------------
+n = 9
+4 1 1 1 1 
+abaabaabbababaabbabaaba
+Syncword length: 23
+-------------------------------------------------------------------------------
+n = 9
+1 1 4 1 1 
+abababaabbababaabbababa
+Syncword length: 23
+-------------------------------------------------------------------------------
+n = 9
+4 4 
+abaabaababbaababbabaaba
+Syncword length: 23
+-------------------------------------------------------------------------------
+n = 10
+4 1 1 1 1 1 
+abaabaabbababbbabaabbabaaba
+Syncword length: 27
+-------------------------------------------------------------------------------
+n = 10
+1 4 1 1 1 1 
+abaabaabababaabbababaabaaba
+Syncword length: 27
+-------------------------------------------------------------------------------
+n = 10
+1 1 4 1 1 1 
+ababaaababaabbababaabbababa
+Syncword length: 27
+-------------------------------------------------------------------------------
+n = 10
+1 4 4 
+abaabaababaabababbabaabaaba
+Syncword length: 27
+-------------------------------------------------------------------------------
+n = 10
+1 1 7 
+abababaabbabaaababaabbababa
+Syncword length: 27
+-------------------------------------------------------------------------------
+n = 10
+4 1 4 
+abaabaabbabaabababaabbabaaba
+Syncword length: 28
+-------------------------------------------------------------------------------
+n = 11
+4 1 1 1 1 1 1 
+abaabaabbababaabbababaabbabaaba
+Syncword length: 31
+-------------------------------------------------------------------------------
+n = 11
+1 1 4 1 1 1 1 
+abababaabbababaabbababaabbababa
+Syncword length: 31
+-------------------------------------------------------------------------------
+n = 11
+4 1 4 1 
+abaabaabbababaabbababaabbabaaba
+Syncword length: 31
+-------------------------------------------------------------------------------
+n = 11
+4 1 1 4 
+abaabaabbababaabbababaabbabaaba
+Syncword length: 31
+-------------------------------------------------------------------------------
+n = 11
+1 1 4 4 
+abababaabbababaabbababaabbababa
+Syncword length: 31
+-------------------------------------------------------------------------------
+n = 11
+1 1 7 1 
+abababaababbaababaaababbaabababa
+Syncword length: 32
+-------------------------------------------------------------------------------
+n = 12
+4 1 1 1 1 1 1 1 
+abaabaabbababaabbababbbabaabbabaaba
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 4 1 1 1 1 1 1 
+abaabaabababaabbababaabbababaabaaba
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 1 4 1 1 1 1 1 
+ababaaababaabbababaabbababaabbababa
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 4 4 1 1 
+abaabaababaababaababbababbaababaaba
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+4 1 1 4 1 
+abaabaabbababaabbababbbabaabbabaaba
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 4 1 4 1 
+abaabaabababaabbababaabbababaabaaba
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 1 4 4 1 
+ababaaababaabbababaabbababaabbababa
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 4 1 1 4 
+abaabaabababaabbababaabbababaabaaba
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+1 1 4 1 4 
+ababaaababaabbababaabbababaabbababa
+Syncword length: 35
+-------------------------------------------------------------------------------
+n = 12
+4 1 4 1 1 
+abaabaabbababaabbabaabababaabbabaaba
+Syncword length: 36
+-------------------------------------------------------------------------------
+n = 12
+1 1 7 1 1 
+abababaabbabaaabaababaaababbaabababa
+Syncword length: 36
+-------------------------------------------------------------------------------
+n = 12
+4 1 1 1 4 
+abaabaabbababaabbababaabbababaabbaba
+Syncword length: 36
