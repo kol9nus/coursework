@@ -3,9 +3,6 @@
 #include "Executor.h"
 #include "Delta.h"
 #include "OutResult.h"
-#include <ctime>
-#include <string>
-#include <stdio.h>
 
 
 Executor::Executor()

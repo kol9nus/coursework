@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Executor.h"
-#include <string>
 
 int main()
 {

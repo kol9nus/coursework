@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "OutResult.h"
-#include <string>
-#include <fstream>
 
 OutResult::OutResult(int numberOfStates, string syncWord, int syncWordLength, vector<int> combination)
 {

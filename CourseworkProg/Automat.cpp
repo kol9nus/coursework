@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Automat.h"
-#include "string"
 #include "State.h"
 #include "Delta.h"
-#include <algorithm>
 
 Automat::Automat()
 {
