@@ -7,27 +7,14 @@
 
 Executor::Executor()
 {
-	currentPath = defineCurrentPath();
-	string currentDate = getCurrentDate();
-	maxFileName = currentDate + "max" + ".txt";
-	offsetFileName = currentDate + "offset" + ".txt";
+	maxFileName = Utils::getCurrentDate() + "max" + ".txt";
+	offsetFileName = Utils::getCurrentDate() + "offset" + ".txt";
 	createFileIfNotExists(maxFileName);
 	createFileIfNotExists(offsetFileName);
 }
 
 Executor::~Executor()
 {
-}
-
-string Executor::defineCurrentPath()
-{
-	char* buffer;
-
-	// Get the current working directory: 
-	if ((buffer = _getcwd(NULL, 0)) == NULL)
-		perror("_getcwd error");
-	string result(buffer);
-	return result;
 }
 
 void Executor::createFileIfNotExists(string filename)
@@ -41,46 +28,6 @@ void Executor::createFileIfNotExists(string filename)
 	else {
 		cerr << "failed: " << errno << std::endl;
 	}
-}
-
-void Executor::addZeroIfitNeeds(string * str, int n)
-{
-	if (n < 10)
-		str->append("0");
-}
-
-string Executor::getCurrentPath()
-{
-	return currentPath;
-}
-
-string Executor::getCurrentDate()
-{
-	time_t now = time(0);
-
-	tm ltm;
-	localtime_s(&ltm, &now);
-	string result = "";
-
-	int year = 1900 + ltm.tm_year;
-	int month = 1 + ltm.tm_mon;
-	int day = ltm.tm_mday;
-	int hour = ltm.tm_hour;
-	int min = ltm.tm_min;
-	int sec = ltm.tm_sec;
-
-	result += to_string(year) + ".";
-	addZeroIfitNeeds(&result, month);
-	result += to_string(month) + ".";
-	addZeroIfitNeeds(&result, day);
-	result += to_string(day) + " ";
-	addZeroIfitNeeds(&result, hour);
-	result += to_string(hour) + ".";
-	addZeroIfitNeeds(&result, min);
-	result += to_string(min) + ".";
-	addZeroIfitNeeds(&result, sec);
-	result += to_string(sec);
-	return result;
 }
 
 vector<vector<int>> Executor::generateAllCombinations(int n, vector<int> numbers)
@@ -118,9 +65,9 @@ void Executor::runSearching()
 		maxSyncWordLength = 0;
 		vector<vector<int>> combinations = generateAllCombinations(i, combinationsNumbers);
 		for each (vector<int> combination in combinations) {
-			Automat * automat = Automat::createAutomat(1, getCurrentPath());
+			Automat * automat = Automat::createAutomat(1, Utils::getLocalPath());
 			for (int j = 0; j < combination.size(); j++) {
-				Automat * automat2 = Automat::createAutomat(combination[j], getCurrentPath());
+				Automat * automat2 = Automat::createAutomat(combination[j], Utils::getLocalPath());
 				bool isNeedReverse = j % 2;
 				if (isNeedReverse)
 					automat2->reverse();
@@ -186,16 +133,16 @@ void Executor::printResults(vector<OutResult*> max, vector<OutResult*> maxDec) {
 }
 
 void Executor::generateAutomats11744() {
-	Automat * automat = Automat::createAutomat(1, getCurrentPath());
+	Automat * automat = Automat::createAutomat(1, Utils::getLocalPath());
 
-	Automat * automat2 = Automat::createAutomat(1, getCurrentPath());
+	Automat * automat2 = Automat::createAutomat(1, Utils::getLocalPath());
 	vector<Delta> deltas;
 	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], false));
 	automat->concatenateWithOther(automat2, deltas);
 	deltas.clear();
 	automat2->clear();
 
-	automat2 = Automat::createAutomat(1, getCurrentPath());
+	automat2 = Automat::createAutomat(1, Utils::getLocalPath());
 	automat2->reverse();
 	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], true));
 	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], true));
@@ -203,14 +150,14 @@ void Executor::generateAutomats11744() {
 	deltas.clear();
 	automat2->clear();
 
-	automat2 = Automat::createAutomat(7, getCurrentPath());
+	automat2 = Automat::createAutomat(7, Utils::getLocalPath());
 	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], false));
 	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], false));
 	automat->concatenateWithOther(automat2, deltas);
 	deltas.clear();
 	automat2->clear();
 
-	automat2 = Automat::createAutomat(4, getCurrentPath());
+	automat2 = Automat::createAutomat(4, Utils::getLocalPath());
 	automat2->reverse();
 	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], true));
 	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], true));
@@ -218,7 +165,7 @@ void Executor::generateAutomats11744() {
 	deltas.clear();
 	automat2->clear();
 
-	automat2 = Automat::createAutomat(4, getCurrentPath());
+	automat2 = Automat::createAutomat(4, Utils::getLocalPath());
 	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], false));
 	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], false));
 	automat->concatenateWithOther(automat2, deltas);
@@ -236,7 +183,7 @@ void Executor::generateAutomats11744() {
 	createFileIfNotExists(fileName);
 
 	for (int i = 18; i < 30; i++) {
-		automat2 = Automat::createAutomat(1, getCurrentPath());
+		automat2 = Automat::createAutomat(1, Utils::getLocalPath());
 		bool isNeedRevers = (i + 1) % 2;
 		if (isNeedRevers)
 			automat2->reverse();
@@ -249,7 +196,7 @@ void Executor::generateAutomats11744() {
 	}
 
 	for (int i = 30; i < 40; i++) {
-		automat2 = Automat::createAutomat(1, getCurrentPath());
+		automat2 = Automat::createAutomat(1, Utils::getLocalPath());
 		bool isNeedRevers = (i + 1) % 2;
 		if (isNeedRevers)
 			automat2->reverse();
