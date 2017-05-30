@@ -12,7 +12,8 @@ Utils::~Utils()
 
 void Utils::Init()
 {
-	calculatePath();
+	utils.calculatePath();
+	utils.caluclateCurrentDate();
 }
 
 const std::string &Utils::getLocalPath()
@@ -25,12 +26,12 @@ const std::string& Utils::getCurrentDate()
 	return currentDate;
 }
 
-void Utils::calculatePath()
+string Utils::calculatePath()
 {
 	char* buffer;
 	if ((buffer = _getcwd(NULL, 0)) == NULL)
 		perror("_getcwd error");
-	std::string path(buffer);
+	return string(buffer);
 }
 
 string Utils::caluclateCurrentDate()

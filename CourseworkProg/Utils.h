@@ -5,15 +5,17 @@ public:
 	Utils();
 	~Utils();
 	static void Init();
-	static const std::string &getLocalPath();
-	static const std::string &getCurrentDate();
+	const std::string &getLocalPath();
+	const std::string &getCurrentDate();
+
+	static Utils utils;
+	static std::string calculatePath();
+	static std::string caluclateCurrentDate();
 
 private:
-	static void calculatePath();
-	static std::string caluclateCurrentDate();
 	static void addZeroIfitNeeds(std::string* str, int n);
 
-	static std::string currentDate;
-	static std::string path; // Путь до исполнияемого файла
+	std::string currentDate;
+	std::string path; // Путь до исполнияемого файла
 };
 

@@ -7,8 +7,8 @@
 
 Executor::Executor()
 {
-	maxFileName = Utils::getCurrentDate() + "max" + ".txt";
-	offsetFileName = Utils::getCurrentDate() + "offset" + ".txt";
+	maxFileName = Utils::caluclateCurrentDate() + "max" + ".txt";
+	offsetFileName = Utils::caluclateCurrentDate() + "offset" + ".txt";
 	createFileIfNotExists(maxFileName);
 	createFileIfNotExists(offsetFileName);
 }
@@ -65,20 +65,7 @@ void Executor::runSearching()
 		maxSyncWordLength = 0;
 		vector<vector<int>> combinations = generateAllCombinations(i, combinationsNumbers);
 		for each (vector<int> combination in combinations) {
-			Automat * automat = Automat::createAutomat(1, Utils::getLocalPath());
-			for (int j = 0; j < combination.size(); j++) {
-				Automat * automat2 = Automat::createAutomat(combination[j], Utils::getLocalPath());
-				bool isNeedReverse = j % 2;
-				if (isNeedReverse)
-					automat2->reverse();
-				vector<Delta> deltas;
-				if (j != 0) {
-					deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], isNeedReverse));
-				}
-				deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], isNeedReverse));
-				automat->concatenateWithOther(automat2, deltas);
-				automat2->clear();
-			}
+			Automat * automat = Automat::createAutomat(combination);
 			int syncWordLength = automat->generateBooleanAutomat();
 			if (maxSyncWordLength < syncWordLength) {
 				clearArray(&decMaxAutomats);
@@ -133,57 +120,18 @@ void Executor::printResults(vector<OutResult*> max, vector<OutResult*> maxDec) {
 }
 
 void Executor::generateAutomats11744() {
-	Automat * automat = Automat::createAutomat(1, Utils::getLocalPath());
 
-	Automat * automat2 = Automat::createAutomat(1, Utils::getLocalPath());
-	vector<Delta> deltas;
-	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], false));
-	automat->concatenateWithOther(automat2, deltas);
-	deltas.clear();
-	automat2->clear();
+	vector<int> combination({ 1, 1, 7, 4, 4 });
 
-	automat2 = Automat::createAutomat(1, Utils::getLocalPath());
-	automat2->reverse();
-	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], true));
-	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], true));
-	automat->concatenateWithOther(automat2, deltas);
-	deltas.clear();
-	automat2->clear();
-
-	automat2 = Automat::createAutomat(7, Utils::getLocalPath());
-	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], false));
-	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], false));
-	automat->concatenateWithOther(automat2, deltas);
-	deltas.clear();
-	automat2->clear();
-
-	automat2 = Automat::createAutomat(4, Utils::getLocalPath());
-	automat2->reverse();
-	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], true));
-	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], true));
-	automat->concatenateWithOther(automat2, deltas);
-	deltas.clear();
-	automat2->clear();
-
-	automat2 = Automat::createAutomat(4, Utils::getLocalPath());
-	deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], false));
-	deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], false));
-	automat->concatenateWithOther(automat2, deltas);
-	deltas.clear();
-	automat2->clear();
-
-	vector<int> combination;
-	combination.push_back(1);
-	combination.push_back(1);
-	combination.push_back(7);
-	combination.push_back(4);
-	combination.push_back(4);
+	Automat * automat = Automat::createAutomat(combination);
 
 	string fileName = "combinations117441.txt";
 	createFileIfNotExists(fileName);
 
+	Automat * automat2;
+	vector<Delta> deltas;
 	for (int i = 18; i < 30; i++) {
-		automat2 = Automat::createAutomat(1, Utils::getLocalPath());
+		automat2 = Automat::createAutomat(1);
 		bool isNeedRevers = (i + 1) % 2;
 		if (isNeedRevers)
 			automat2->reverse();
@@ -193,10 +141,14 @@ void Executor::generateAutomats11744() {
 		deltas.clear();
 		automat2->clear();
 		combination.push_back(1);
+
+		int syncWordLength = automat->generateBooleanAutomat();
+		float ratio = (float)syncWordLength / (float)(i + 1);
+		OutResult *result = new OutResult(i + 1, automat->getSyncWord(), syncWordLength, combination);
 	}
 
 	for (int i = 30; i < 40; i++) {
-		automat2 = Automat::createAutomat(1, Utils::getLocalPath());
+		automat2 = Automat::createAutomat(1);
 		bool isNeedRevers = (i + 1) % 2;
 		if (isNeedRevers)
 			automat2->reverse();

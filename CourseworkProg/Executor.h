@@ -12,6 +12,7 @@ public:
 	vector<vector<int>> generateAllCombinations(int n, vector<int> numbers);
 	void runSearching();
 	void generateAutomats11744();
+	Automat* createAutomat(vector<int> beginning);
 	void setCombinationsNumbers(vector<int>);
 
 private:

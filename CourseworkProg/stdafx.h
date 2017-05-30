@@ -16,6 +16,7 @@
 #include <direct.h>
 #include <string>
 #include <ctime>
+#include <sstream>
 
 #include "Utils.h"
 

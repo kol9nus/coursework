@@ -34,10 +34,10 @@ void State::setNext(State * next, bool num)
 	this->next[num] = next;
 }
 
-void State::setNext(State * nextA, State * nextB)
+void State::setNext(State * nextA, State * nextB, bool isReversed)
 {
-	this->next[0] = nextA;
-	this->next[1] = nextB;
+	this->next[isReversed] = nextA;
+	this->next[!isReversed] = nextB;
 }
 
 void State::setIndex(int index)
@@ -52,7 +52,7 @@ void State::reverse()
 	next[0] = temp;
 }
 
-void State::increasIndexes(int value)
+void State::increasIndex(int value)
 {
 	index += value;
 }

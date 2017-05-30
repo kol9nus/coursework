@@ -12,49 +12,74 @@ Automat::~Automat()
 {
 }
 
-Automat * Automat::createAutomat(int n, string path)
+Automat * Automat::createAutomat(int n, bool isReversed)
 {
 	Automat *automat = new Automat();
-	//string fileName = "F:\\Study\\3.2\\Coursework\\CourseworkProg\\Debug\\AutomatBlocks\\";
-	string fileName = path;
-	fileName += "\\AutomatBlocks\\" + std::to_string(n) + "-block.txt";
-	if (!automat->initWithFile(fileName)) {
-		cout << "trouble:(";
+	string fileName = Utils::calculatePath() + "\\AutomatBlocks\\" + std::to_string(n) + "-block.txt";
+	if (!automat->initWithFile(fileName, isReversed)) {
+		cout << "Не смог инициализировать файлом";
 		system("pause");
 	}
 	return automat;
 }
 
-bool Automat::initWithFile(string pathToFile)
+bool Automat::initWithFile(string pathToFile, bool isReversed)
 {
-	string line;
 	ifstream ifs(pathToFile);
-	if (ifs.is_open())
+	if (!ifs.is_open())
 	{
-		vector<int> temp;
-		getline(ifs, line);
-		temp = splitString(line);
-		this->numberOfStates = temp[0];
-		for (int i = 0; i < numberOfStates; i++)
-			states.push_back(new State(states.size()));
-		for (int i = 0; i < numberOfStates; i++)
-		{
-			getline(ifs, line);
-			temp = splitString(line);
-			states[i]->setNext(states[temp[0]], states[temp[1]]);
-		}
-	}
-	else {
 		return false;
 	}
+
+	string line;
+	getline(ifs, line);
+	vector<int> temp = splitString(line);
+
+	this->numberOfStates = temp[0];
+	for (int i = 0; i < numberOfStates; i++)
+		states.push_back(new State(states.size()));
+
+	for (int i = 0; i < numberOfStates; i++)
+	{
+		getline(ifs, line);
+		temp = splitString(line);
+		states[i]->setNext(states[temp[0]], states[temp[1]], isReversed);
+	}
 	return true;
+}
+
+Automat * Automat::createAutomat(vector<int> combination)
+{
+	Automat *result = Automat::createAutomat(1);
+	for (int j = 0; j < combination.size(); j++) {
+		bool isNeedReverse = j % 2;
+		Automat * automat2 = Automat::createAutomat(combination[j], isNeedReverse);
+		vector<Delta> deltas;
+		if (j != 0) {
+			deltas.push_back(Delta(result->states[result->numberOfStates - 1], automat2->states[0], isNeedReverse));
+		}
+		deltas.push_back(Delta(automat2->states[0], result->states[result->numberOfStates - 1], isNeedReverse));
+		result->concatenateWithOther(automat2, deltas);
+		automat2->clear();
+	}
+	return result;
+}
+
+vector<int> Automat::splitString(string str)
+{
+	stringstream iss(str);
+	int number;
+	std::vector<int> result;
+	while (iss >> number)
+		result.push_back(number);
+	return result;
 }
 
 void Automat::concatenateWithOther(Automat * automat, vector<Delta> deltas)
 {
 	for (int i = 0; i < automat->numberOfStates; i++) {
 		State * next = automat->states[i];
-		next->increasIndexes(this->numberOfStates);
+		next->increasIndex(this->numberOfStates);
 		this->states.push_back(next);
 	}
 	for each (Delta delta in deltas)
@@ -62,7 +87,7 @@ void Automat::concatenateWithOther(Automat * automat, vector<Delta> deltas)
 	this->numberOfStates = numberOfStates + automat->numberOfStates;
 }
 
-void Automat::addState(State * state, vector<Delta> deltas)
+void Automat::pushState(State * state, vector<Delta> deltas)
 {
 	state->setIndex(numberOfStates);
 	states.push_back(state);
@@ -171,19 +196,6 @@ Automat * Automat::copy(Automat* automat)
 		newAutomat.states[i]->setNext(newAutomat.states[temp->getNext(false)->getIndex()], newAutomat.states[temp->getNext(true)->getIndex()]);
 	}
 	return &newAutomat;
-}
-
-vector<int> Automat::splitString(string str)
-{
-	vector<int> x;
-	int pos = str.find(" ");
-	while (pos != string::npos) {
-		x.push_back(stoi(str.substr(0, pos)));
-		str = str.substr(pos + 1);
-		pos = str.find(" ");
-	}
-	x.push_back(stoi(str));
-	return x;
 }
 
 vector<int> Automat::generateStates(int i)

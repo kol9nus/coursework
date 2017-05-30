@@ -11,11 +11,11 @@ public:
 	Automat();
 	~Automat();
 
-	static Automat * createAutomat(int n, string path);
+	static Automat * createAutomat(int n, bool isReversed = false);
+	static Automat * createAutomat(vector<int> combination);
 
-	bool initWithFile(string pathToFile);
 	void concatenateWithOther(Automat * automat, vector<Delta> deltas);
-	void addState(State * state, vector<Delta> deltas);
+	void pushState(State * state, vector<Delta> deltas);
 	int generateBooleanAutomat();
 	int getInselfPath(int index);
 	void reverse();
@@ -23,6 +23,7 @@ public:
 	Automat * copy(Automat* automat);
 	string getSyncWord() { return syncWord; };
 private:
+	bool initWithFile(string pathToFile, bool isReversed);
 	vector<int> splitString(string str);
 	vector<int> generateStates(int i);
 	// Переменные

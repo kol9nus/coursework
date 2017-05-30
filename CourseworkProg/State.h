@@ -9,10 +9,10 @@ public:
 	State* getNext(bool num);
 	int getIndex();
 	void setNext(State* next, bool num);
-	void setNext(State* nextA, State* nextB);
+	void setNext(State* nextA, State* nextB, bool isReversed = false);
 	void setIndex(int index);
 	void reverse();
-	void increasIndexes(int value);
+	void increasIndex(int value);
 private:
 	//Переменные
 public:
