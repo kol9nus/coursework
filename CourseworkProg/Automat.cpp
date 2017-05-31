@@ -3,24 +3,43 @@
 #include "State.h"
 #include "Delta.h"
 
-Automat::Automat()
+Automat::Automat(int n, bool isReversed)
 {
-}
-
-
-Automat::~Automat()
-{
-}
-
-Automat * Automat::createAutomat(int n, bool isReversed)
-{
-	Automat *automat = new Automat();
-	string fileName = Utils::calculatePath() + "\\AutomatBlocks\\" + std::to_string(n) + "-block.txt";
-	if (!automat->initWithFile(fileName, isReversed)) {
+	string fileName = Utils::getLocalPath() + "\\AutomatBlocks\\" + std::to_string(n) + "-block.txt";
+	if (!this->initWithFile(fileName, isReversed)) {
 		cout << "Не смог инициализировать файлом";
 		system("pause");
 	}
-	return automat;
+}
+
+Automat::Automat(vector<int> combination)
+	: Automat(1)
+{
+	for (int j = 0; j < combination.size(); j++) {
+		bool isNeedReverse = j % 2 == 1;
+		Automat * automat2 = new Automat(combination[j], isNeedReverse);
+		this->concatenateWithOther(automat2, isNeedReverse);
+		automat2->clear();
+	}
+}
+
+Automat::Automat(const Automat & other)
+{
+	this->numberOfStates = other.numberOfStates;
+	for (int i = 0; i < other.numberOfStates; i++) {
+		this->states.push_back(new State(other.states[0]->getIndex()));
+	}
+	for (int i = 0; i < other.numberOfStates; i++) {
+		State * temp = other.states[i];
+		this->states[i]->setNext(
+			this->states[temp->getNext(false)->getIndex()],
+			this->states[temp->getNext(true)->getIndex()]
+		);
+	}
+}
+
+Automat::~Automat()
+{
 }
 
 bool Automat::initWithFile(string pathToFile, bool isReversed)
@@ -33,36 +52,20 @@ bool Automat::initWithFile(string pathToFile, bool isReversed)
 
 	string line;
 	getline(ifs, line);
-	vector<int> temp = splitString(line);
+	vector<int> splittedString = splitString(line);
 
-	this->numberOfStates = temp[0];
-	for (int i = 0; i < numberOfStates; i++)
+	this->numberOfStates = splittedString[0];
+	for (int i = 0; i < numberOfStates; i++) {
 		states.push_back(new State(states.size()));
+	}
 
 	for (int i = 0; i < numberOfStates; i++)
 	{
 		getline(ifs, line);
-		temp = splitString(line);
-		states[i]->setNext(states[temp[0]], states[temp[1]], isReversed);
+		splittedString = splitString(line);
+		states[i]->setNext(states[splittedString[0]], states[splittedString[1]], isReversed);
 	}
 	return true;
-}
-
-Automat * Automat::createAutomat(vector<int> combination)
-{
-	Automat *result = Automat::createAutomat(1);
-	for (int j = 0; j < combination.size(); j++) {
-		bool isNeedReverse = j % 2;
-		Automat * automat2 = Automat::createAutomat(combination[j], isNeedReverse);
-		vector<Delta> deltas;
-		if (j != 0) {
-			deltas.push_back(Delta(result->states[result->numberOfStates - 1], automat2->states[0], isNeedReverse));
-		}
-		deltas.push_back(Delta(automat2->states[0], result->states[result->numberOfStates - 1], isNeedReverse));
-		result->concatenateWithOther(automat2, deltas);
-		automat2->clear();
-	}
-	return result;
 }
 
 vector<int> Automat::splitString(string str)
@@ -75,16 +78,24 @@ vector<int> Automat::splitString(string str)
 	return result;
 }
 
-void Automat::concatenateWithOther(Automat * automat, vector<Delta> deltas)
+void Automat::concatenateWithOther(Automat * automat, bool isB)
 {
-	for (int i = 0; i < automat->numberOfStates; i++) {
-		State * next = automat->states[i];
-		next->increasIndex(this->numberOfStates);
-		this->states.push_back(next);
+	if (automat->numberOfStates > 0) {
+		for each (State *state in automat->states) {
+			state->increaseIndex(this->numberOfStates);
+			this->states.push_back(state);
+		}
+
+		// 0ое состояние должно по обеим стрелкам указывать в себя
+		if (this->numberOfStates > 1) {
+			states[numberOfStates - 1]->setNext(states[numberOfStates], isB);
+		}
+		states[numberOfStates]->setNext(states[numberOfStates - 1], isB);
+
+		this->numberOfStates += automat->numberOfStates;
+
+		automat->clear();
 	}
-	for each (Delta delta in deltas)
-		delta.from->setNext(delta.to, delta.symbol);
-	this->numberOfStates = numberOfStates + automat->numberOfStates;
 }
 
 void Automat::pushState(State * state, vector<Delta> deltas)
@@ -98,66 +109,56 @@ void Automat::pushState(State * state, vector<Delta> deltas)
 
 int Automat::generateBooleanAutomat()
 {
-	vector<unsigned long long> statesBFS[2];
-	vector<string> statesPaths[2];
-	if ((1 << this->numberOfStates) - 1 > UINT64_MAX)
-		throw exception("overflow");
-	vector<vector<bool>> isNumberWasArrays;
-	int maxSize = 1 << 30;
-	if (this->numberOfStates > 30) {
-		vector<bool> isNumberWas(1 << 30, false);
-		for (int i = 0; i < (1 << (this->numberOfStates - 30)); i++) {
-			isNumberWasArrays.push_back(isNumberWas);
-		}
-	}
-	else {
-		vector<bool> isNumberWas(1 << this->numberOfStates, false);
-		isNumberWasArrays.push_back(isNumberWas);
-	}
-	// хватает только для 64 состояний :( Надо будет решить проблемку.
-	statesBFS[0].push_back((1<<this->numberOfStates) - 1);
-	statesPaths[0].push_back("");
-	vector<bool>* isNumberWas;
+	if ((1 << this->numberOfStates) - 1 > UINT64_MAX || (1 << this->numberOfStates) - 1 > vector<bool>().max_size())
+		throw exception("Unreal to calculate on this device");
+
+	ull one = 1;
+	vector<bool> isNumberWas(one << this->numberOfStates, false);
+
+	struct BFSState {
+		unsigned long long state;
+		string path;
+	};
+
+	vector<BFSState> statesBFS[2];
+	statesBFS[0].push_back({ (one << this->numberOfStates) - 1, "" });
+
 	int j = 0;
-	bool modJ = j % 2;
+	bool modJ = j % 2 == 1;
 	while (statesBFS[modJ].size() != 0) {
 		statesBFS[!modJ].clear();
-		statesPaths[!modJ].clear();
 		for (int i = 0; i < statesBFS[modJ].size(); i++)
 		{
-			int state = statesBFS[modJ][i];
+			ull state = statesBFS[modJ][i].state;
 			if (state == 1)
 			{
-				syncWord = statesPaths[modJ][i];
+				syncWord = statesBFS[modJ][i].path;
 				return j;
 			}
-			int nextStateA = 0;
-			int nextStateB = 0;
+
+			ull nextStateA = 0;
+			ull nextStateB = 0;
 			for each (int s in generateStates(state)) {
-				int nextStateAI = 1<<states[s]->getNext(0)->getIndex();
-				int nextStateBI = 1<<states[s]->getNext(1)->getIndex();
+				ull nextStateAI = one<<states[s]->getNext(false)->getIndex();
+				ull nextStateBI = one<<states[s]->getNext(true)->getIndex();
 				if (!(nextStateAI & nextStateA))
 					nextStateA += nextStateAI;
 				if (!(nextStateBI & nextStateB))
 					nextStateB += nextStateBI;
 			}
-			isNumberWas = &isNumberWasArrays[nextStateA / maxSize];
-			if (!isNumberWas->at(nextStateA % maxSize))
+			if (!isNumberWas[nextStateA])
 			{
-				isNumberWas->at(nextStateA % maxSize) = true;
-				statesBFS[!modJ].push_back(nextStateA);
-				statesPaths[!modJ].push_back(statesPaths[modJ][i] + "a");
+				isNumberWas[nextStateA] = true;
+				statesBFS[!modJ].push_back({ nextStateA, statesBFS[modJ][i].path + "a" });
 			}
-			isNumberWas = &isNumberWasArrays[nextStateB / maxSize];
-			if (!isNumberWas->at(nextStateB % maxSize))
+			if (!isNumberWas[nextStateB])
 			{
-				isNumberWas->at(nextStateB % maxSize) = true;
-				statesBFS[!modJ].push_back(nextStateB);
-				statesPaths[!modJ].push_back(statesPaths[modJ][i] + "b");
+				isNumberWas[nextStateB] = true;
+				statesBFS[!modJ].push_back({ nextStateB, statesBFS[modJ][i].path + "b" });
 			}
 		}
 		j++;
-		modJ = j % 2;
+		modJ = j % 2 == 1;
 	}
 	return -1;
 }
@@ -184,21 +185,7 @@ void Automat::clear()
 	states.clear();
 }
 
-Automat * Automat::copy(Automat* automat)
-{
-	Automat newAutomat;
-	newAutomat.numberOfStates = automat->numberOfStates;
-	for (int i = 0; i < automat->numberOfStates; i++) {
-		newAutomat.states.push_back(new State(automat->states[0]->getIndex()));
-	}
-	for (int i = 0; i < automat->numberOfStates; i++) {
-		State * temp = automat->states[i];
-		newAutomat.states[i]->setNext(newAutomat.states[temp->getNext(false)->getIndex()], newAutomat.states[temp->getNext(true)->getIndex()]);
-	}
-	return &newAutomat;
-}
-
-vector<int> Automat::generateStates(int i)
+vector<int> Automat::generateStates(ull i)
 {
 	vector<int> result;
 	int s = 0;

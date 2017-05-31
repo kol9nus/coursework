@@ -3,21 +3,21 @@ class State
 {
 	// Функции
 public:
-	State(int index);
-	State(int index, State** next);
+	State(size_t index);
+	State(size_t index, State** next);
 	~State();
 	State* getNext(bool num);
-	int getIndex();
+	size_t getIndex();
 	void setNext(State* next, bool num);
 	void setNext(State* nextA, State* nextB, bool isReversed = false);
-	void setIndex(int index);
+	void setIndex(size_t index);
 	void reverse();
-	void increasIndex(int value);
+	void increaseIndex(size_t value);
 private:
 	//Переменные
 public:
 private:
-	int index;
+	size_t index;
 	State* next[2];
 };
 

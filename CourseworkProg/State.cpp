@@ -2,12 +2,12 @@
 #include "State.h"
 
 
-State::State(int index)
+State::State(size_t index)
 {
 	this->index = index;
 }
 
-State::State(int index, State** next)
+State::State(size_t index, State** next)
 {
 	this->index = index;
 	this->next[0] = next[0];
@@ -24,7 +24,7 @@ State * State::getNext(bool num)
 	return this->next[num];
 }
 
-int State::getIndex()
+size_t State::getIndex()
 {
 	return this->index;
 }
@@ -40,7 +40,7 @@ void State::setNext(State * nextA, State * nextB, bool isReversed)
 	this->next[!isReversed] = nextB;
 }
 
-void State::setIndex(int index)
+void State::setIndex(size_t index)
 {
 	this->index = index;
 }
@@ -52,7 +52,7 @@ void State::reverse()
 	next[0] = temp;
 }
 
-void State::increasIndex(int value)
+void State::increaseIndex(size_t value)
 {
 	index += value;
 }

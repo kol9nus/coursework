@@ -1,21 +1,21 @@
 #pragma once
+using namespace std;
 class Utils
 {
 public:
 	Utils();
 	~Utils();
 	static void Init();
-	const std::string &getLocalPath();
-	const std::string &getCurrentDate();
+	static const string &getLocalPath();
+	static const string &getCurrentDate();
 
-	static Utils utils;
-	static std::string calculatePath();
-	static std::string caluclateCurrentDate();
+	static void calculatePath();
+	static void caluclateCurrentDate();
 
 private:
-	static void addZeroIfitNeeds(std::string* str, int n);
+	static void addZeroIfitNeeds(string* str, int n);
 
-	std::string currentDate;
-	std::string path; // Путь до исполнияемого файла
+	static string currentDate;
+	static string path; // Путь до исполнияемого файла
 };
 

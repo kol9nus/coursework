@@ -7,8 +7,8 @@
 
 Executor::Executor()
 {
-	maxFileName = Utils::caluclateCurrentDate() + "max" + ".txt";
-	offsetFileName = Utils::caluclateCurrentDate() + "offset" + ".txt";
+	maxFileName = Utils::getCurrentDate() + "max" + ".txt";
+	offsetFileName = Utils::getCurrentDate() + "offset" + ".txt";
 	createFileIfNotExists(maxFileName);
 	createFileIfNotExists(offsetFileName);
 }
@@ -30,52 +30,71 @@ void Executor::createFileIfNotExists(string filename)
 	}
 }
 
-vector<vector<int>> Executor::generateAllCombinations(int n, vector<int> numbers)
+vector<vector<int>> Executor::generateAllCombinations(int sum, vector<int> numbers) {
+	sort(numbers.begin(), numbers.end());
+	return generateCombinations(sum, numbers);
+}
+
+vector<vector<int>> Executor::generateCombinations(int sum, vector<int> numbers)
 {
+	/*
+		Генерирует все комбинации, которыми можно составить sum из numbers,
+		т.е. если sum = 5; numbers = [1, 4], то результат будет
+		[
+			[1, 1, 1, 1, 1],
+			[1, 4],
+			[4, 1]
+		]
+	*/
 	vector<vector<int>> result;
-	int k = n;
-	for (int i = 0; i < numbers.size(); i++) {
-		if (k >= numbers[i])
-		{
-			vector<vector<int>> tempResult = generateAllCombinations(k - numbers[i], numbers);
-			if (tempResult.size() == 0) {
-				vector<int> tmp;
-				tmp.push_back(numbers[i]);
-				tempResult.push_back(tmp);
-			}
-			else {
-				for (int j = 0; j < tempResult.size(); j++) {
-					tempResult[j].push_back(numbers[i]);
-				}
-			}
-			result.insert(result.end(), tempResult.begin(), tempResult.end());
+	int i = 0;
+	while (i < numbers.size() && sum >= numbers[i]) {
+		// берём всевозможные комбинации для sum - <рассматриваемое число>
+		vector<vector<int>> tempResult = generateCombinations(sum - numbers[i], numbers);
+		if (tempResult.size() == 0) {
+			tempResult.push_back(vector<int>({ numbers[i] }));
+		} else {
+			appendValueToEveryArray(numbers[i], tempResult);
 		}
+		result.insert(result.end(), tempResult.begin(), tempResult.end());
+		i++;
 	}
 	return result;
+}
+
+void Executor::appendValueToEveryArray(int value, vector<vector<int>> &arrays) {
+	for (int j = 0; j < arrays.size(); j++) {
+		arrays[j].push_back(value);
+	}
+}
+
+void Executor::printCombinations(const vector<vector<int>> &combinations) {
+	for (int i = 0; i < combinations.size(); i++) {
+		for (int j = 0; j < combinations[i].size(); j++) {
+			cout << combinations[i][j] << ", ";
+		}
+		cout << endl;
+	}
 }
 
 void Executor::runSearching()
 {
 	vector<OutResult*> maxAutomats;
 	vector<OutResult*> decMaxAutomats;
-	int maxSyncWordLength = 0;
 	for (int i = 4; i < 64; i++) {
-		clearArray(&maxAutomats);
-		clearArray(&decMaxAutomats);
-		maxSyncWordLength = 0;
+		maxAutomats.clear();
+		decMaxAutomats.clear();
+		int maxSyncWordLength = 0;
 		vector<vector<int>> combinations = generateAllCombinations(i, combinationsNumbers);
 		for each (vector<int> combination in combinations) {
-			Automat * automat = Automat::createAutomat(combination);
+			Automat * automat = new Automat(combination);
 			int syncWordLength = automat->generateBooleanAutomat();
 			if (maxSyncWordLength < syncWordLength) {
-				clearArray(&decMaxAutomats);
+				decMaxAutomats.clear();
 				if (maxSyncWordLength == syncWordLength - 1) {
 					decMaxAutomats.assign(maxAutomats.begin(), maxAutomats.end());
-					maxAutomats.clear();
 				}
-				else {
-					clearArray(&maxAutomats);
-				}
+				maxAutomats.clear();
 				OutResult *result = new OutResult(i + 1, automat->getSyncWord(), syncWordLength, combination);
 				maxAutomats.push_back(result);
 				maxSyncWordLength = syncWordLength;
@@ -99,12 +118,8 @@ void Executor::runSearching()
 	}
 }
 
-void Executor::clearArray(vector<OutResult*>* arr)
-{
-	for (int i = 0; i < arr->size(); i++) {
-		delete arr->at(i);
-	}
-	arr->clear();
+void Executor::findMaxSyncWordForCombination() {
+
 }
 
 void Executor::printResults(vector<OutResult*> max, vector<OutResult*> maxDec) {
@@ -123,40 +138,28 @@ void Executor::generateAutomats11744() {
 
 	vector<int> combination({ 1, 1, 7, 4, 4 });
 
-	Automat * automat = Automat::createAutomat(combination);
+	Automat * automat = new Automat(combination);
 
 	string fileName = "combinations117441.txt";
 	createFileIfNotExists(fileName);
 
 	Automat * automat2;
-	vector<Delta> deltas;
-	for (int i = 18; i < 30; i++) {
-		automat2 = Automat::createAutomat(1);
-		bool isNeedRevers = (i + 1) % 2;
-		if (isNeedRevers)
-			automat2->reverse();
-		deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], isNeedRevers));
-		deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], isNeedRevers));
-		automat->concatenateWithOther(automat2, deltas);
-		deltas.clear();
+	/*for (int i = 18; i < 30; i++) {
+		bool isNeedRevers = (i + 1) % 2 == 1;
+		automat2 = new Automat(1, isNeedRevers);
+		automat->concatenateWithOther(automat2, isNeedRevers);
 		automat2->clear();
 		combination.push_back(1);
 
 		int syncWordLength = automat->generateBooleanAutomat();
 		float ratio = (float)syncWordLength / (float)(i + 1);
 		OutResult *result = new OutResult(i + 1, automat->getSyncWord(), syncWordLength, combination);
-	}
+	}*/
 
-	for (int i = 30; i < 40; i++) {
-		automat2 = Automat::createAutomat(1);
-		bool isNeedRevers = (i + 1) % 2;
-		if (isNeedRevers)
-			automat2->reverse();
-		deltas.push_back(Delta(automat2->states[0], automat->states[automat->numberOfStates - 1], isNeedRevers));
-		deltas.push_back(Delta(automat->states[automat->numberOfStates - 1], automat2->states[0], isNeedRevers));
-		automat->concatenateWithOther(automat2, deltas);
-		deltas.clear();
-		automat2->clear();
+	for (int i = 18; i < 40; i++) {
+		bool isNeedRevers = (i + 1) % 2 == 1;
+		automat2 = new Automat(1, isNeedRevers);
+		automat->concatenateWithOther(automat2, isNeedRevers);
 
 		combination.push_back(1);
 

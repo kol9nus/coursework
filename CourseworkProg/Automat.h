@@ -2,33 +2,32 @@
 class State;
 class Delta;
 
+typedef unsigned long long ull;
 
 using namespace std;
 class Automat
 {
 	// Функции
 public:
-	Automat();
+	Automat(int n, bool isReversed = false);
+	Automat(vector<int> combination);
+	Automat(const Automat &other);
 	~Automat();
 
-	static Automat * createAutomat(int n, bool isReversed = false);
-	static Automat * createAutomat(vector<int> combination);
-
-	void concatenateWithOther(Automat * automat, vector<Delta> deltas);
+	void concatenateWithOther(Automat * automat, bool isB);
 	void pushState(State * state, vector<Delta> deltas);
 	int generateBooleanAutomat();
 	int getInselfPath(int index);
 	void reverse();
 	void clear();
-	Automat * copy(Automat* automat);
 	string getSyncWord() { return syncWord; };
 private:
 	bool initWithFile(string pathToFile, bool isReversed);
 	vector<int> splitString(string str);
-	vector<int> generateStates(int i);
+	vector<int> generateStates(ull i);
 	// Переменные
 public:
-	int numberOfStates;
+	int numberOfStates = 0;
 	vector<State*> states;
 private:
 	string syncWord = "";
