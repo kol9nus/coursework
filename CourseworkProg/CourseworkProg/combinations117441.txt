@@ -1,15 +1,10 @@
 -------------------------------------------------------------------------------
-n = 19
-1 1 7 4 4 1 
-abababaabbabaababaaababbabbbababbaababbaabababbaabababbaababbaabababa
-Syncword length: 69
+n = 26
+1 1 7 4 4 1 1 1 1 1 1 1 1 
+abababaabbabaaababaabbababaabbabaababbbabbabbababbaabababbaabababbaababaabaabbabaabbababaabbababbaabababa
+Syncword length: 105
 -------------------------------------------------------------------------------
-n = 20
-1 1 7 4 4 1 1 
-ababaaababaabbabaabbababaabbabaababbbabbabaaababaababbabbbababbaababaaababa
-Syncword length: 75
--------------------------------------------------------------------------------
-n = 21
-1 1 7 4 4 1 1 1 
-ababaaababaabbababbbabbababaabbababbabbabbbabaababbaabababbaababaaababbaabababa
-Syncword length: 79
+n = 27
+1 1 7 4 4 1 1 1 1 1 1 1 1 1 
+abababaabbabaababbaababaaababaabbababaabbababbabbaabaababaabbababaabbabaaababaabbababbaabababbaababbaabababa
+Syncword length: 108

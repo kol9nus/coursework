@@ -137,32 +137,43 @@ void Executor::printResults(vector<OutResult*> max, vector<OutResult*> maxDec) {
 void Executor::generateAutomats11744() {
 
 	vector<int> combination({ 1, 1, 7, 4, 4 });
-
 	Automat * automat = new Automat(combination);
-
 	string fileName = "combinations117441.txt";
 	createFileIfNotExists(fileName);
 
+	cout << "Со скольки состояний начать анализировать? (>=19)" << endl;
+	int minN = 0;
+	cin >> minN;
+	while (minN < 19) {
+		cout << "Минимально - 19. Введите число снова." << endl;
+		cin >> minN;
+	}
+
+	cout << "До скольки состояний анализировать?(>="<< minN << ")" << endl;
+	int maxN = 0;
+	cin >> maxN;
+	while (maxN < minN) {
+		cout << "Минимально - " << minN << ". Введите число снова." << endl;
+		cin >> maxN;
+	}
+	minN--;
+
 	Automat * automat2;
-	/*for (int i = 18; i < 30; i++) {
+	for (int i = automat->numberOfStates; i < minN; i++) {
 		bool isNeedRevers = (i + 1) % 2 == 1;
 		automat2 = new Automat(1, isNeedRevers);
 		automat->concatenateWithOther(automat2, isNeedRevers);
 		automat2->clear();
 		combination.push_back(1);
+	}
 
-		int syncWordLength = automat->generateBooleanAutomat();
-		float ratio = (float)syncWordLength / (float)(i + 1);
-		OutResult *result = new OutResult(i + 1, automat->getSyncWord(), syncWordLength, combination);
-	}*/
-
-	for (int i = 18; i < 40; i++) {
+	for (int i = minN; i < maxN; i++) {
 		bool isNeedRevers = (i + 1) % 2 == 1;
 		automat2 = new Automat(1, isNeedRevers);
 		automat->concatenateWithOther(automat2, isNeedRevers);
 
 		combination.push_back(1);
-
+		
 		int syncWordLength = automat->generateBooleanAutomat();
 		float ratio = (float)syncWordLength / (float)(i + 1);
 		OutResult *result = new OutResult(i + 1, automat->getSyncWord(), syncWordLength, combination);

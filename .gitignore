@@ -241,12 +241,13 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-*max.txt
-*offset.txt
-*max.rtf
-*offset.rtf
-*offsetHighlighted.*
-*maxHighlighted.*
+**/*max.txt
+**/*offset.txt
+**/*max.rtf
+**/*offset.rtf
+**/*offsetHighlighted.*
+**/*maxHighlighted.*
+**/*combinations117441.txt
 
 # JetBrains
 .idea

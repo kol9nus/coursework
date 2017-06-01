@@ -4,6 +4,7 @@
 
 int main()
 {
+	setlocale(LC_ALL, "Russian");
 	Utils::Init();
 	Executor executor;
 	vector<int> numbers = {1, 4, 7, 10};
