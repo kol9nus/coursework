@@ -243,3 +243,10 @@ ModelManifest.xml
 
 *max.txt
 *offset.txt
+*max.rtf
+*offset.rtf
+*offsetHighlighted.*
+*maxHighlighted.*
+
+# JetBrains
+.idea
