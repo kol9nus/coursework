@@ -17,6 +17,8 @@ public:
 	void concatenateWithOther(Automat * automat, bool isB);
 	void pushState(State * state, vector<Delta> deltas);
 	int generateBooleanAutomat();
+	void printBooleanAutomatForSyncWord();
+	void printBooleanAutomatForSyncWord(string syncword);
 	int getInselfPath(int index);
 	void reverse();
 	void clear();

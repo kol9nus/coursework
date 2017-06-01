@@ -148,6 +148,7 @@
     <ClInclude Include="Automat.h" />
     <ClInclude Include="Delta.h" />
     <ClInclude Include="Executor.h" />
+    <ClInclude Include="FilePrinter.h" />
     <ClInclude Include="OutResult.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="CourseworkProg.cpp" />
     <ClCompile Include="Delta.cpp" />
     <ClCompile Include="Executor.cpp" />
+    <ClCompile Include="FilePrinter.cpp" />
     <ClCompile Include="OutResult.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="stdafx.cpp">

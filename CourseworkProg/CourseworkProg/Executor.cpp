@@ -174,12 +174,16 @@ void Executor::generateAutomats11744() {
 
 		combination.push_back(1);
 		
-		int syncWordLength = automat->generateBooleanAutomat();
+		/*int syncWordLength = automat->generateBooleanAutomat();
 		float ratio = (float)syncWordLength / (float)(i + 1);
 		OutResult *result = new OutResult(i + 1, automat->getSyncWord(), syncWordLength, combination);
 
 		result->printResult(result->makeResult());
-		result->printToFile(result->makeResult(), fileName);
+		result->printToFile(result->makeResult(), fileName);*/
+		if (i >= 18 && (i - 18) % 3 == 0) {
+			int syncWordLength = automat->generateBooleanAutomat();
+			automat->printBooleanAutomatForSyncWord();
+		}
 	}
 }
 

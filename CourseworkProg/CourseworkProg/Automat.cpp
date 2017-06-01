@@ -2,6 +2,7 @@
 #include "Automat.h"
 #include "State.h"
 #include "Delta.h"
+#include "FilePrinter.h"
 
 Automat::Automat(int n, bool isReversed)
 {
@@ -161,6 +162,52 @@ int Automat::generateBooleanAutomat()
 		modJ = j % 2 == 1;
 	}
 	return -1;
+}
+
+void Automat::printBooleanAutomatForSyncWord()
+{
+	ull one = 1;
+	ull currentState = (one << numberOfStates) - 1;
+	auto i = syncWord.begin();
+	FilePrinter printBooleanAutomat("BooleanAutomat" + to_string(numberOfStates) + ".txt");
+	while (currentState != 1 || i != syncWord.end()) {
+		ull nextState = 0;
+		for each (int s in generateStates(currentState)) {
+			printBooleanAutomat(to_string(s) + " ");
+			ull nextStateI = one << states[s]->getNext((*i) == 'b')->getIndex();
+			if (!(nextStateI & nextState))
+				nextState += nextStateI;
+		}
+		printBooleanAutomat("\n");
+		currentState = nextState;
+		i++;
+	}
+	if (currentState != 1) {
+		throw new exception("oops, error");
+	}
+}
+
+void Automat::printBooleanAutomatForSyncWord(string syncWord)
+{
+	ull one = 1;
+	ull currentState = (one << numberOfStates) - 1;
+	auto i = syncWord.begin();
+	FilePrinter printBooleanAutomat("BooleanAutomat" + to_string(numberOfStates) + ".txt");
+	while (currentState != 1 || i != syncWord.end()) {
+		ull nextState = 0;
+		for each (int s in generateStates(currentState)) {
+			printBooleanAutomat(to_string(s) + " ");
+			ull nextStateI = one << states[s]->getNext((*i) == 'b')->getIndex();
+			if (!(nextStateI & nextState))
+				nextState += nextStateI;
+		}
+		printBooleanAutomat("\n");
+		currentState = nextState;
+		i++;
+	}
+	if (currentState != 1) {
+		throw new exception("oops, error");
+	}
 }
 
 int Automat::getInselfPath(int index)
